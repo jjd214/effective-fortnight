@@ -1,0 +1,193 @@
+Postgres
+user - postgres
+Password - admin
+Port - 5432
+
+Maven concept
+clean
+default (lifecycle) - compile 
+		    - test
+		    - package
+		    - verify
+
+Shortcuts
+create test : file - ctrl + shift t	
+select dup : alt + j
+
+git 
+generate ssh - ssh-keygen -o
+ssh path - C:\Users\johnj\.ssh
+
+workflow
+Start New Work
+git checkout main
+git pull origin main
+git checkout -b feature/data-validation
+
+git push -u origin feature/data-validation
+
+
+clean up after merge
+git branch -d dev/data-validation 
+git push origin --delete dev/data-validation
+
+
+docker (commands)
+docker start container-name
+docker stop container-name
+docker restart container-name
+docker ps    : show start container
+docker ps -a : show stopped container
+docker network ls : show network
+docker build -t practice-app . : create container
+docker build -t student-app:v2 . : -t is tag
+docker images
+docker compose down
+docker pull - pull an image
+docker create - create container
+docker run - create container and run it
+
+docker-compose up --build : runs docker compose	
+docker-compose down : remove container
+
+docker run -it openjdk:27-ea-oraclelinux9 : attached run and exit manually
+docker run -dit openjdk:27-ea-oraclelinux9 : de attached run and exit
+docker exec 988d6117244b ls -a: show dir of container
+docker cp target/work-0.0.1-SNAPSHOT.jar 88a3eb399595:/tmp - Copies and paste inside the container path specified.
+docker commit --change='CMD ["java","-jar","/tmp/work-0.0.1-SNAPSHOT.jar"]' 88a3eb399595 test-project-name:v1 - create an image and change the command from default (Jshell) to java executable jar file.
+docker commit --change="ENTRYPOINT [\"java\",\"-jar\",\"/tmp/work-0.0.1-SNAPSHOT.jar\"]" 88a3eb399595 test:v2
+
+FROM openjdk:27-ea-oraclelinux9
+
+WORKDIR /app
+
+COPY target/student-app.jar app.jar
+
+ENTRYPOINT ["java", "-jar", "app.jar"]
+
+version: "3.7"
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    networks:
+      - student-network
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: test
+    ports:
+      - "5432:5432"
+    networks:
+      - student-network
+    volumes:
+      - postgres-student-data:/var/lib/postgresql
+
+networks:
+  student-network:
+    driver: bridge
+
+volumes:
+  postgres-student-data:
+
+
+
+docker run --name some-postgres -e POSTGRES_PASSWORD=admin -e POSTGRES_DB=work_db -d postgres
+docker network create mynetwork
+docker network connect mynetwork some-postgres
+docker run --network mynetwork -e SPRING_DATASOURCE_URL=jdbc:postgresql://some-postgres:5432/work_db -e SPRING_DATASOURCE_USERNAME=postgres -e SPRING_DATASOURCE_PASSWORD=admin -p 8080:8080 test:v2
+
+
+
+spring
+annotations - @Component : Spring manages this class / Let spring create an object not me.
+	    - @Autowired : Spring injects an existing Product bean here | 
+                           Inside the class or object let spring create another object.
+            - @Scope("prototype") : Controls how many instances Spring creates
+			            Spring use singleton pattern by default.
+	    - @Service - use @Component annotation internally / Spring Bean class as well (No need to use @Bean annotation)
+	    - @Repository use @Component annotation internally / Spring Bean class as well
+            - @Configuration - first scan once project is run and checks for methods with annotated @Bean
+            - @Bean - methods are called by spring automatically and return objects in Application context 
+ 		      (Objects are singleton regardless of the @Scope. 
+            - @Qualifier - use specific bean if more than one exist.
+	    - @Primary - use higher priority bean.
+            - @Value - use the key to get the value from another file or custom.properties
+            - @PropertySource("classpath: path") - specify the path of the file for @Value annotation
+	    - @Profile - set @Bean use for specific profile or environment.
+	    - @RestController - Controller
+            - @GetMapping - GET
+            - @ResponseStatus - Modify what status to use 
+            - @RequestBody - use type application/json body
+            - @PathVariable - value comes from url endpoint
+	    - @RequestParameter - values comes from query params
+            - @Entity - create table acts like a model
+	    - @Table - modify table name 
+	    - @JsonManagedReference - forward direction The "Parent"
+            - @JsonBackReference backward direction The "Child"
+	    - @PrePersist - For entity (on create) behavior
+            - @PreUpdate - For entity (on update) behavior
+            - @PreDelete - For entity (on delete) behavior
+	    - auto-ddl : create (dangerous) update (safe for dev mode)
+
+profiles    - 
+
+ClassDto          → incoming request
+ClassResponseDto  → outgoing response
+
+🧱 Owning side vs Inverse side (critical idea)
+
+In every bidirectional relationship, there is:
+
+Owning side → controls the foreign key
+Inverse side → just mirrors it (read-only for DB)
+
+unidirectional - Only one entity knows the others.
+bidirectional - Both entities knows each other.
+owning side - (Child) andun yung foreign key sa table nayon
+inverse side - (Parent) andito yung mapping.
+
+@Getter
+@Setter
+@Accessors(chain = true)  // <- enables fluent pattern
+
+cascade = CascadeType.ALL - Whatever I do to the parent, do the same to the children.
+orphanRemoval = true - “If a child entity is removed from its parent’s collection, it should also be deleted from the database.”
+
+@Transactional - “Run this method inside a database transaction.
+If something fails, all changes are rolled back automatically.
+If it succeeds, all changes are committed together.”
+
+
+JUnit / Mockito
+@Mock - creates mock (dao)
+@InjectMock - Class we want to test (auto find constructor)
+@BeforeEach - executed before each @Test, @RepeatedTest
+@AfterEach - executed after each @Test, @RepeatedTest
+@BeforeAll - executed once before all testf
+@After all - executed once after all test 
+
+java -jar (dir) : Runs java jar file. (executable)
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/student_db
+    username: postgres
+    password: admin
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+

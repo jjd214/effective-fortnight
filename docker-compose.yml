@@ -1,0 +1,31 @@
+version: "3.7"
+services:
+  app:
+    build: .
+    ports:
+      - "8080:8080"
+    networks:
+      - kabsu-network
+
+
+  postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: kabsu_db
+    ports:
+      - "5432:5432"
+    networks:
+      - kabsu-network
+    volumes:
+      - kabsu-postgres-data:/var/lib/postgresql
+
+networks:
+  kabsu-network:
+    driver: bridge
+
+volumes:
+  kabsu-postgres-data:
+
+
