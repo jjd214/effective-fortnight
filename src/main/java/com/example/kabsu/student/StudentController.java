@@ -62,4 +62,13 @@ public class StudentController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
     }
+
+    @PostMapping("/{student-id}/subjects/{subject-id}")
+    public ResponseEntity<ApiResponse<StudentResponseDto>> assignSubject(
+            @PathVariable("student-id") Long studentId,
+            @PathVariable("subject-id") Long subjectId) {
+        var response = studentService.assignSubject(studentId, subjectId);
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(ApiResponse.success(response));
+    }
 }
