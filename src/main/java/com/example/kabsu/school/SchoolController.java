@@ -2,10 +2,12 @@ package com.example.kabsu.school;
 
 import com.example.kabsu.common.response.ApiResponse;
 import jakarta.validation.Valid;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @RestController
@@ -33,15 +35,18 @@ public class SchoolController {
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<SchoolResponseDto>>> findAll() {
-        var response = schoolService.findAll();
+    public ResponseEntity<ApiResponse<List<SchoolResponseDto>>> findAll(
+            @PageableDefault(size = 2, sort = "id")Pageable pageable) {
+        var response = schoolService.findAll(pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(response));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<SchoolResponseDto>>> findSchoolByName(@RequestParam(name = "schoolName") String name) {
-        var response = schoolService.findSchoolByName(name);
+    public ResponseEntity<ApiResponse<List<SchoolResponseDto>>> findSchoolByName(
+            @RequestParam(name = "schoolName") String name,
+            @PageableDefault(size = 10, sort = "id") Pageable pageable) {
+        var response = schoolService.findSchoolByName(name, pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(response));
     }

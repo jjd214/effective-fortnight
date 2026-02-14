@@ -4,6 +4,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import org.springframework.data.domain.Pageable;
 import java.util.List;
 
 @Service
@@ -32,16 +33,16 @@ public class SchoolService {
     }
 
     @Transactional(readOnly = true)
-    public List<SchoolResponseDto> findAll() {
-        return schoolRepository.findAll()
+    public List<SchoolResponseDto> findAll(Pageable pageable) {
+        return schoolRepository.findAll(pageable)
                 .stream()
                 .map(schoolMapper::toDto)
                 .toList();
     }
 
     @Transactional(readOnly = true)
-    public List<SchoolResponseDto> findSchoolByName(String name) {
-        return schoolRepository.findAllByNameContainsIgnoreCase(name)
+    public List<SchoolResponseDto> findSchoolByName(String name, Pageable pageable) {
+        return schoolRepository.findAllByNameContainsIgnoreCase(name, pageable)
                 .stream()
                 .map(schoolMapper::toDto)
                 .toList();

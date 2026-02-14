@@ -3,6 +3,7 @@ package com.example.kabsu.student;
 import com.example.kabsu.types.Gender;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record StudentResponseDto(
         Long id,
@@ -11,6 +12,7 @@ public record StudentResponseDto(
         String email,
         Integer age,
         Gender gender,
+        List<SubjectSummaryDto> subjects,
         SchoolSummaryDto school,
         LocalDateTime updatedAt,
         LocalDateTime createdAt

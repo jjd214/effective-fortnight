@@ -2,6 +2,7 @@ package com.example.kabsu.student;
 
 import com.example.kabsu.school.School;
 import com.example.kabsu.school.SchoolRepository;
+import com.example.kabsu.subject.SubjectRepository;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -14,13 +15,16 @@ public class StudentService {
     private final StudentRepository studentRepository;
     private final StudentMapper studentMapper;
     private final SchoolRepository schoolRepository;
+    private final SubjectRepository subjectRepository;
 
     public StudentService(StudentRepository studentRepository,
                           StudentMapper studentMapper,
-                          SchoolRepository schoolRepository) {
+                          SchoolRepository schoolRepository,
+                          SubjectRepository subjectRepository) {
         this.studentRepository = studentRepository;
         this.studentMapper = studentMapper;
         this.schoolRepository = schoolRepository;
+        this.subjectRepository = subjectRepository;
     }
 
     @Transactional
@@ -40,7 +44,7 @@ public class StudentService {
 
     @Transactional(readOnly = true)
     public List<StudentResponseDto> findAll() {
-        return studentRepository.findAllWithSchool()
+        return studentRepository.findAllWithRelations()
                 .stream()
                 .map(studentMapper::toDto)
                 .toList();
@@ -75,6 +79,28 @@ public class StudentService {
         var student = studentRepository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("Student not found with id " + id));
         studentRepository.delete(student);
+    }
+
+    @Transactional
+    public StudentResponseDto assignSubject(Long studentId, Long subjectId) {
+        var student = studentRepository.findById(studentId)
+                .orElseThrow(()-> new EntityNotFoundException("Student not found with id " + studentId));
+        var subject = subjectRepository.findById(subjectId)
+                .orElseThrow(()-> new EntityNotFoundException("Subject not found with id " + subjectId));
+        student.assignSubject(subject);
+        var saved = studentRepository.save(student);
+        return studentMapper.toDto(saved);
+    }
+
+    @Transactional
+    public void removeSubject(Long studentId, Long subjectId) {
+        var student = studentRepository.findById(studentId)
+                .orElseThrow(()-> new EntityNotFoundException("Student not found with id " + studentId));
+        var subject = subjectRepository.findById(subjectId)
+                .orElseThrow(()-> new EntityNotFoundException("Subject not found with id " + subjectId));
+
+        student.removeSubject(subject);
+        studentRepository.save(student);
     }
 
     private School findSchoolById(Long schoolId) {
