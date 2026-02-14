@@ -44,7 +44,7 @@ public class StudentService {
 
     @Transactional(readOnly = true)
     public List<StudentResponseDto> findAll() {
-        return studentRepository.findAllWithSchool()
+        return studentRepository.findAllWithRelations()
                 .stream()
                 .map(studentMapper::toDto)
                 .toList();
@@ -81,6 +81,7 @@ public class StudentService {
         studentRepository.delete(student);
     }
 
+    @Transactional
     public StudentResponseDto assignSubject(Long studentId, Long subjectId) {
         var student = studentRepository.findById(studentId)
                 .orElseThrow(()-> new EntityNotFoundException("Student not found with id " + studentId));
@@ -89,6 +90,17 @@ public class StudentService {
         student.assignSubject(subject);
         var saved = studentRepository.save(student);
         return studentMapper.toDto(saved);
+    }
+
+    @Transactional
+    public void removeSubject(Long studentId, Long subjectId) {
+        var student = studentRepository.findById(studentId)
+                .orElseThrow(()-> new EntityNotFoundException("Student not found with id " + studentId));
+        var subject = subjectRepository.findById(subjectId)
+                .orElseThrow(()-> new EntityNotFoundException("Subject not found with id " + subjectId));
+
+        student.removeSubject(subject);
+        studentRepository.save(student);
     }
 
     private School findSchoolById(Long schoolId) {
