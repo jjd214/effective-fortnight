@@ -3,12 +3,15 @@ package com.example.kabsu.student;
 import com.example.kabsu.school.School;
 import com.example.kabsu.subject.Subject;
 import com.example.kabsu.types.Gender;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Setter
 @Getter
@@ -47,7 +50,8 @@ public class Student {
         joinColumns = @JoinColumn(name = "student_id"),
         inverseJoinColumns = @JoinColumn(name = "subject_id")
     )
-    private List<Subject> subjects = new ArrayList<>();
+    @JsonIgnoreProperties("students")
+    private Set<Subject> subjects = new HashSet<>();
 
     @PreUpdate
     protected void onUpdate() {
