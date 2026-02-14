@@ -2,12 +2,15 @@ package com.example.kabsu.subject;
 
 import com.example.kabsu.student.Student;
 import com.example.kabsu.types.SubjectType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -36,7 +39,8 @@ public class Subject {
     private LocalDateTime createdAt;
 
     @ManyToMany(mappedBy = "subjects")
-    private List<Student> students = new ArrayList<>();
+    @JsonIgnoreProperties("subjects")
+    private Set<Student> students = new HashSet<>();
 
     @PreUpdate
     protected void onUpdate() {
