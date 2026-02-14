@@ -1,6 +1,7 @@
 package com.example.kabsu.student;
 
 import com.example.kabsu.school.School;
+import com.example.kabsu.subject.Subject;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -33,6 +34,11 @@ public class StudentMapper {
                 student.getEmail(),
                 student.getAge(),
                 student.getGender(),
+                student.getSubjects() != null ?
+                        student.getSubjects()
+                                        .stream()
+                                        .map(this::toSubjectSummaryDto)
+                                        .toList() : null,
                 student.getSchool() != null ? toSchoolSummaryDto(student.getSchool()) : null,
                 student.getUpdatedAt(),
                 student.getCreatedAt()
@@ -49,5 +55,16 @@ public class StudentMapper {
         );
     }
 
+    private SubjectSummaryDto toSubjectSummaryDto(Subject subject) {
+        return new SubjectSummaryDto(
+                subject.getId(),
+                subject.getName(),
+                subject.getDescription(),
+                subject.getCode(),
+                subject.getUnits(),
+                subject.getType(),
+                subject.getCreatedAt()
+        );
+    }
 
 }
