@@ -18,4 +18,5 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     // @Query("SELECT s FROM Student s LEFT JOIN FETCH s.school WHERE LOWER(s.firstName) LIKE LOWER(CONCAT('%', :firstName, '%'))")
     @EntityGraph(attributePaths = {"school", "subjects"})
     List<Student> findAllByFirstNameContainsIgnoreCase(String firstName, Pageable pageable);
+    boolean existsByEmailIgnoreCase(String email);
 }
