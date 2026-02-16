@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface SubjectRepository extends JpaRepository<Subject, Long> {
-    List<Subject> findAllByNameContainsIgnoreCase(String name, Pageable pageable);
+    List<Subject> findAllByNameContainsIgnoreCase(String subjectName, Pageable pageable);
 }

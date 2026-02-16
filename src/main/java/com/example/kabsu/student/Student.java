@@ -1,11 +1,14 @@
 package com.example.kabsu.student;
 
+import com.example.kabsu.common.BaseEntity;
 import com.example.kabsu.school.School;
 import com.example.kabsu.subject.Subject;
 import com.example.kabsu.types.Gender;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -15,15 +18,11 @@ import java.util.Set;
 
 @Setter
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@SuperBuilder
 @Entity
-public class Student {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class Student extends BaseEntity {
 
     @Column(name = "first_name", length = 100, nullable = false)
     private String firstName;
@@ -34,11 +33,6 @@ public class Student {
     private Integer age;
     @Enumerated(EnumType.STRING)
     private Gender gender;
-
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
 
     @ManyToOne
     @JoinColumn(name = "school_id")
@@ -52,17 +46,6 @@ public class Student {
     )
     @JsonIgnoreProperties("students")
     private Set<Subject> subjects = new HashSet<>();
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = this.createdAt;
-    }
 
     public void changeSchool(School newSchool) {
         if (school != null) {
@@ -82,6 +65,5 @@ public class Student {
         subjects.remove(subject);
         subject.getStudents().remove(this);
     }
-
 
 }

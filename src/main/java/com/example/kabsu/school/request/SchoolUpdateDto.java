@@ -1,8 +1,6 @@
-package com.example.kabsu.school;
+package com.example.kabsu.school.request;
 
 import com.example.kabsu.types.SchoolType;
-
-import java.util.Optional;
 
 public record SchoolUpdateDto(
         String name,

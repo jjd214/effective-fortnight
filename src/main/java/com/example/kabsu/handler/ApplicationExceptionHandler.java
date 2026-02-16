@@ -1,4 +1,4 @@
-package com.example.kabsu.exception;
+package com.example.kabsu.handler;
 
 import com.example.kabsu.common.response.ApiError;
 import org.springframework.http.HttpStatus;

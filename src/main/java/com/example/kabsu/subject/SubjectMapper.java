@@ -1,12 +1,16 @@
 package com.example.kabsu.subject;
 
+import com.example.kabsu.subject.request.SubjectRequestDto;
+import com.example.kabsu.subject.request.SubjectUpdateDto;
+import com.example.kabsu.subject.response.SubjectResponseDto;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SubjectMapper {
 
     public Subject toEntity(SubjectRequestDto dto) {
-        return new Subject.SubjectBuilder()
+        return Subject
+                .builder()
                 .name(dto.name())
                 .code(dto.code())
                 .description(dto.description())

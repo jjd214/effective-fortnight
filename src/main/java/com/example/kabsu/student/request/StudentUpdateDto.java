@@ -1,4 +1,4 @@
-package com.example.kabsu.student;
+package com.example.kabsu.student.request;
 
 import com.example.kabsu.types.Gender;
 import jakarta.validation.constraints.*;

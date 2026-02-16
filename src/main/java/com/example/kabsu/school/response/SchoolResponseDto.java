@@ -1,4 +1,4 @@
-package com.example.kabsu.school;
+package com.example.kabsu.school.response;
 
 import com.example.kabsu.types.SchoolType;
 
