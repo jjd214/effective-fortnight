@@ -240,13 +240,10 @@ git checkout main
 git pull origin main
 ```
 
-## License
-
-[Specify your license here]
 
 ## Contact
 
-[Your contact information or team information]
+shibal
 
 ---
 
