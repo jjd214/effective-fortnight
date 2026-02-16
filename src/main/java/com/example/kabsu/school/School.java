@@ -1,12 +1,13 @@
 package com.example.kabsu.school;
 
+import com.example.kabsu.common.BaseEntity;
 import com.example.kabsu.student.Student;
 import com.example.kabsu.types.SchoolType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import lombok.experimental.Accessors;
+import lombok.experimental.SuperBuilder;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -14,14 +15,11 @@ import java.util.List;
 
 @Getter
 @Setter
-@Accessors(chain = true)
 @NoArgsConstructor
+@AllArgsConstructor
+@SuperBuilder
 @Entity
-public class School {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+public class School extends BaseEntity {
 
     @Column(length = 100, nullable = false)
     private String name;
@@ -30,24 +28,8 @@ public class School {
     @Enumerated(EnumType.STRING)
     private SchoolType type;
 
-    @Column(name = "updated_at")
-    private LocalDateTime updatedAt;
-    @Column(name = "created_at", nullable = false, updatable = false)
-    private LocalDateTime createdAt;
-
     @OneToMany(mappedBy = "school", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Student> students = new ArrayList<>();
-
-    @PreUpdate
-    protected void onUpdate() {
-        this.updatedAt = LocalDateTime.now();
-    }
-
-    @PrePersist
-    protected void onCreate() {
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = this.createdAt;
-    }
 
     public void addStudent(Student student) {
         students.add(student);

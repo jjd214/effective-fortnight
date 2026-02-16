@@ -1,4 +1,4 @@
-package com.example.kabsu.student;
+package com.example.kabsu.student.response;
 
 import com.example.kabsu.types.Gender;
 

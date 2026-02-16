@@ -1,5 +1,6 @@
 package com.example.kabsu.student;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.EntityGraph;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -13,8 +14,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     // @Query("SELECT s FROM Student s LEFT JOIN FETCH s.school")
     @EntityGraph(attributePaths = {"school", "subjects"})
     @Query("SELECT DISTINCT s FROM Student s")
-    List<Student> findAllWithRelations();
+    List<Student> findAllWithRelations(Pageable pageable);
     // @Query("SELECT s FROM Student s LEFT JOIN FETCH s.school WHERE LOWER(s.firstName) LIKE LOWER(CONCAT('%', :firstName, '%'))")
     @EntityGraph(attributePaths = {"school", "subjects"})
-    List<Student> findAllByFirstNameContainsIgnoreCase(String firstName);
+    List<Student> findAllByFirstNameContainsIgnoreCase(String firstName, Pageable pageable);
 }

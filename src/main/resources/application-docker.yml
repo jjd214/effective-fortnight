@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://postgres:5432/kabsu_db
-    username: postgres
-    password: secret
+    url: jdbc:postgresql://${DOCKER_POSTGRES_URL}:${DOCKER_POSTGRES_PORT}/${DOCKER_POSTGRES_NAME}
+    username: ${DOCKER_POSTGRES_USERNAME}
+    password: ${DOCKER_POSTGRES_PASSWORD}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:

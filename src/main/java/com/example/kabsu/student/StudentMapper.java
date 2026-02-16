@@ -1,6 +1,11 @@
 package com.example.kabsu.student;
 
 import com.example.kabsu.school.School;
+import com.example.kabsu.student.request.StudentRequestDto;
+import com.example.kabsu.student.request.StudentUpdateDto;
+import com.example.kabsu.student.response.SchoolSummaryDto;
+import com.example.kabsu.student.response.StudentResponseDto;
+import com.example.kabsu.student.response.SubjectSummaryDto;
 import com.example.kabsu.subject.Subject;
 import org.springframework.stereotype.Component;
 
@@ -8,7 +13,8 @@ import org.springframework.stereotype.Component;
 public class StudentMapper {
 
     public Student toEntity(StudentRequestDto dto, School school) {
-        return new Student.StudentBuilder()
+        return Student
+                .builder()
                 .firstName(dto.firstName())
                 .lastName(dto.lastName())
                 .email(dto.email())

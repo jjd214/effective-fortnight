@@ -1,4 +1,4 @@
-package com.example.kabsu.school;
+package com.example.kabsu.school.request;
 
 import com.example.kabsu.types.SchoolType;
 import jakarta.validation.constraints.NotBlank;

@@ -8,5 +8,5 @@ import java.util.List;
 
 @Repository
 public interface SchoolRepository extends JpaRepository<School, Long> {
-    List<School> findAllByNameContainsIgnoreCase(String name, Pageable pageable);
+    List<School> findAllByNameContainsIgnoreCase(String schoolName, Pageable pageable);
 }
