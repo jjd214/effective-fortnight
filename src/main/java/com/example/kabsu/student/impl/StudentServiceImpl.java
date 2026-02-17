@@ -1,5 +1,7 @@
 package com.example.kabsu.student.impl;
 
+import com.example.kabsu.exception.BusinessException;
+import com.example.kabsu.exception.ErrorCode;
 import com.example.kabsu.school.School;
 import com.example.kabsu.school.SchoolRepository;
 import com.example.kabsu.student.*;
@@ -27,6 +29,7 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     @Override
     public StudentResponseDto create(final StudentRequestDto dto) {
+        checkEmailExists(dto.email());
         var school = findSchoolById(dto.schoolId());
         var student = studentMapper.toEntity(dto,school);
         var saved = studentRepository.save(student);
@@ -114,4 +117,9 @@ public class StudentServiceImpl implements StudentService {
                 .orElseThrow(()-> new EntityNotFoundException("School not found with id " + schoolId));
     }
 
+    private void checkEmailExists(String email) {
+        final boolean emailExists = studentRepository.existsByEmailIgnoreCase(email);
+        if (emailExists)
+            throw new BusinessException(ErrorCode.EMAIL_ALREADY_EXISTS);
+    }
 }
