@@ -5,3 +5,7 @@ spring:
     active: ${APP_PROFILE_ACTIVE}
   config:
     import: optional:file:.env[.properties]
+  security:
+    user:
+      name: ${APP_USER}
+      password: ${APP_PASSWORD}
