@@ -1,39 +1,39 @@
 package com.example.kabsu.student;
 
 import com.example.kabsu.school.School;
-import com.example.kabsu.student.request.StudentRequestDto;
-import com.example.kabsu.student.request.StudentUpdateDto;
-import com.example.kabsu.student.response.SchoolSummaryDto;
-import com.example.kabsu.student.response.StudentResponseDto;
-import com.example.kabsu.student.response.SubjectSummaryDto;
+import com.example.kabsu.student.request.StudentRequest;
+import com.example.kabsu.student.request.StudentUpdateRequest;
+import com.example.kabsu.student.response.SchoolSummary;
+import com.example.kabsu.student.response.StudentResponse;
+import com.example.kabsu.student.response.SubjectSummary;
 import com.example.kabsu.subject.Subject;
 import org.springframework.stereotype.Component;
 
 @Component
 public class StudentMapper {
 
-    public Student toEntity(StudentRequestDto dto, School school) {
+    public Student toEntity(final StudentRequest request, School school) {
         return Student
                 .builder()
-                .firstName(dto.firstName())
-                .lastName(dto.lastName())
-                .email(dto.email())
-                .age(dto.age())
-                .gender(dto.gender())
+                .firstName(request.firstName())
+                .lastName(request.lastName())
+                .email(request.email())
+                .age(request.age())
+                .gender(request.gender())
                 .school(school)
                 .build();
     }
 
-    public void updateEntity(StudentUpdateDto dto, Student student) {
-        if (dto.firstName() != null) student.setFirstName(dto.firstName());
-        if (dto.lastName() != null) student.setLastName(dto.lastName());
-        if (dto.email() != null) student.setEmail(dto.email());
-        if (dto.age() != null) student.setAge(dto.age());
-        if (dto.gender() != null) student.setGender(dto.gender());
+    public void updateEntity(final StudentUpdateRequest request, Student student) {
+        if (request.firstName() != null) student.setFirstName(request.firstName());
+        if (request.lastName() != null) student.setLastName(request.lastName());
+        if (request.email() != null) student.setEmail(request.email());
+        if (request.age() != null) student.setAge(request.age());
+        if (request.gender() != null) student.setGender(request.gender());
     }
 
-    public StudentResponseDto toDto(Student student) {
-        return new StudentResponseDto(
+    public StudentResponse toStudentResponse(Student student) {
+        return new StudentResponse(
                 student.getId(),
                 student.getFirstName(),
                 student.getLastName(),
@@ -43,16 +43,16 @@ public class StudentMapper {
                 student.getSubjects() != null ?
                         student.getSubjects()
                                         .stream()
-                                        .map(this::toSubjectSummaryDto)
+                                        .map(this::toSubjectSummary)
                                         .toList() : null,
-                student.getSchool() != null ? toSchoolSummaryDto(student.getSchool()) : null,
+                student.getSchool() != null ? toSchoolSummary(student.getSchool()) : null,
                 student.getUpdatedAt(),
                 student.getCreatedAt()
         );
     }
 
-    private SchoolSummaryDto toSchoolSummaryDto(School school) {
-        return new SchoolSummaryDto(
+    private SchoolSummary toSchoolSummary(School school) {
+        return new SchoolSummary(
                 school.getId(),
                 school.getName(),
                 school.getDescription(),
@@ -61,8 +61,8 @@ public class StudentMapper {
         );
     }
 
-    private SubjectSummaryDto toSubjectSummaryDto(Subject subject) {
-        return new SubjectSummaryDto(
+    private SubjectSummary toSubjectSummary(Subject subject) {
+        return new SubjectSummary(
                 subject.getId(),
                 subject.getName(),
                 subject.getDescription(),

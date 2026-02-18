@@ -1,10 +1,9 @@
 package com.example.kabsu.subject;
 
 import com.example.kabsu.common.response.ApiResponse;
-import com.example.kabsu.subject.impl.SubjectServiceImpl;
-import com.example.kabsu.subject.request.SubjectRequestDto;
-import com.example.kabsu.subject.request.SubjectUpdateDto;
-import com.example.kabsu.subject.response.SubjectResponseDto;
+import com.example.kabsu.subject.request.SubjectRequest;
+import com.example.kabsu.subject.request.SubjectUpdateRequest;
+import com.example.kabsu.subject.response.SubjectResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -20,51 +19,51 @@ import java.util.List;
 @RequestMapping("/api/v1/subjects")
 public class SubjectController {
 
-    private final SubjectServiceImpl subjectServiceImpl;
+    private final SubjectService subjectService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<SubjectResponseDto>> create (@Valid @RequestBody SubjectRequestDto dto) {
-        var response = subjectServiceImpl.create(dto);
+    public ResponseEntity<ApiResponse<SubjectResponse>> create (@Valid @RequestBody SubjectRequest dto) {
+        var response = subjectService.create(dto);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(response));
     }
 
     @GetMapping("/{subject-id}")
-    public ResponseEntity<ApiResponse<SubjectResponseDto>> find(@PathVariable("subject-id") Long id) {
-        var response = subjectServiceImpl.find(id);
+    public ResponseEntity<ApiResponse<SubjectResponse>> find(@PathVariable("subject-id") Long id) {
+        var response = subjectService.find(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(response));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<SubjectResponseDto>>> findBySubjectName(
+    public ResponseEntity<ApiResponse<List<SubjectResponse>>> findBySubjectName(
             @RequestParam String subjectName,
             @PageableDefault(sort = "id") Pageable pageable) {
-        var response = subjectServiceImpl.findBySubjectName(subjectName,pageable);
+        var response = subjectService.findBySubjectName(subjectName,pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(response));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<SubjectResponseDto>>> findAll(
+    public ResponseEntity<ApiResponse<List<SubjectResponse>>> findAll(
             @PageableDefault(sort = "id") Pageable pageable) {
-        var response = subjectServiceImpl.findAll(pageable);
+        var response = subjectService.findAll(pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(response));
     }
 
     @PutMapping("/{subject-id}")
-    public ResponseEntity<ApiResponse<SubjectResponseDto>> update(
+    public ResponseEntity<ApiResponse<SubjectResponse>> update(
             @PathVariable("subject-id") Long subjectId,
-            @Valid @RequestBody SubjectUpdateDto dto) {
-        var response = subjectServiceImpl.update(subjectId, dto);
+            @Valid @RequestBody SubjectUpdateRequest dto) {
+        var response = subjectService.update(subjectId, dto);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(response));
     }
 
     @DeleteMapping("/{subject-id}")
     public ResponseEntity<Void> delete(@PathVariable("subject-id") Long id) {
-        subjectServiceImpl.delete(id);
+        subjectService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
     }
