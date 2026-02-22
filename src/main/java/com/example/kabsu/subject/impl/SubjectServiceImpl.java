@@ -2,9 +2,9 @@ package com.example.kabsu.subject.impl;
 
 import com.example.kabsu.student.Student;
 import com.example.kabsu.subject.*;
-import com.example.kabsu.subject.request.SubjectRequestDto;
-import com.example.kabsu.subject.request.SubjectUpdateDto;
-import com.example.kabsu.subject.response.SubjectResponseDto;
+import com.example.kabsu.subject.request.SubjectRequest;
+import com.example.kabsu.subject.request.SubjectUpdateRequest;
+import com.example.kabsu.subject.response.SubjectResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -22,47 +22,47 @@ public class SubjectServiceImpl implements SubjectService {
 
     @Transactional
     @Override
-    public SubjectResponseDto create(final SubjectRequestDto dto) {
-        var subject = subjectMapper.toEntity(dto);
+    public SubjectResponse create(final SubjectRequest request) {
+        var subject = subjectMapper.toEntity(request);
         var saved = subjectRepository.save(subject);
-        return subjectMapper.toDto(saved);
+        return subjectMapper.toSubjectResponse(saved);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public SubjectResponseDto find(final Long subjectId) {
+    public SubjectResponse find(final Long subjectId) {
         var subject = subjectRepository.findById(subjectId)
                 .orElseThrow(()-> new EntityNotFoundException("Subject not found with id " + subjectId));
-        return subjectMapper.toDto(subject);
+        return subjectMapper.toSubjectResponse(subject);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<SubjectResponseDto> findAll(Pageable pageable) {
+    public List<SubjectResponse> findAll(Pageable pageable) {
         return subjectRepository.findAll(pageable)
                 .stream()
-                .map(subjectMapper::toDto)
+                .map(subjectMapper::toSubjectResponse)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<SubjectResponseDto> findBySubjectName(final String subjectName, Pageable pageable) {
+    public List<SubjectResponse> findBySubjectName(final String subjectName, Pageable pageable) {
         return subjectRepository.findAllByNameContainsIgnoreCase(subjectName, pageable)
                 .stream()
-                .map(subjectMapper::toDto)
+                .map(subjectMapper::toSubjectResponse)
                 .toList();
     }
 
     @Transactional
     @Override
-    public SubjectResponseDto update(final Long subjectId, final SubjectUpdateDto dto) {
+    public SubjectResponse update(final Long subjectId, final SubjectUpdateRequest request) {
         var subject = subjectRepository.findById(subjectId)
                 .orElseThrow(()-> new EntityNotFoundException("Subject not found with id " + subjectId));
 
-        subjectMapper.updateEntity(dto,subject);
+        subjectMapper.updateEntity(request,subject);
         var saved = subjectRepository.save(subject);
-        return subjectMapper.toDto(saved);
+        return subjectMapper.toSubjectResponse(saved);
     }
 
     @Transactional
