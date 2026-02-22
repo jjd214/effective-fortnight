@@ -1,9 +1,9 @@
 package com.example.kabsu.school.impl;
 
 import com.example.kabsu.school.*;
-import com.example.kabsu.school.request.SchoolRequestDto;
-import com.example.kabsu.school.request.SchoolUpdateDto;
-import com.example.kabsu.school.response.SchoolResponseDto;
+import com.example.kabsu.school.request.SchoolRequest;
+import com.example.kabsu.school.request.SchoolUpdateRequest;
+import com.example.kabsu.school.response.SchoolResponse;
 import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -22,47 +22,47 @@ public class SchoolServiceImpl implements SchoolService {
 
     @Transactional
     @Override
-    public SchoolResponseDto create(final SchoolRequestDto dto) {
-        var school = schoolMapper.toEntity(dto);
+    public SchoolResponse create(final SchoolRequest request) {
+        var school = schoolMapper.toEntity(request);
         var saved = schoolRepository.save(school);
-        return schoolMapper.toDto(saved);
+        return schoolMapper.toSchoolResponse(saved);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public SchoolResponseDto find(final Long id) {
+    public SchoolResponse find(final Long id) {
         var school = schoolRepository.findById(id)
                 .orElseThrow(()-> new EntityNotFoundException("School not found with id " + id));
-        return schoolMapper.toDto(school);
+        return schoolMapper.toSchoolResponse(school);
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<SchoolResponseDto> findAll(Pageable pageable) {
+    public List<SchoolResponse> findAll(Pageable pageable) {
         return schoolRepository.findAll(pageable)
                 .stream()
-                .map(schoolMapper::toDto)
+                .map(schoolMapper::toSchoolResponse)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     @Override
-    public List<SchoolResponseDto> findSchoolByName(final String schoolName, Pageable pageable) {
+    public List<SchoolResponse> findSchoolByName(final String schoolName, Pageable pageable) {
         return schoolRepository.findAllByNameContainsIgnoreCase(schoolName, pageable)
                 .stream()
-                .map(schoolMapper::toDto)
+                .map(schoolMapper::toSchoolResponse)
                 .toList();
     }
 
     @Transactional
     @Override
-    public SchoolResponseDto update(final Long schoolId, final SchoolUpdateDto dto) {
+    public SchoolResponse update(final Long schoolId, final SchoolUpdateRequest request) {
         var school = schoolRepository.findById(schoolId)
                 .orElseThrow(()-> new EntityNotFoundException("School not found with id " + schoolId));
 
-        schoolMapper.updateEntity(school, dto);
+        schoolMapper.updateEntity(school, request);
         var saved = schoolRepository.save(school);
-        return schoolMapper.toDto(saved);
+        return schoolMapper.toSchoolResponse(saved);
     }
 
     @Transactional

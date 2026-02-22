@@ -1,35 +1,35 @@
 package com.example.kabsu.subject;
 
-import com.example.kabsu.subject.request.SubjectRequestDto;
-import com.example.kabsu.subject.request.SubjectUpdateDto;
-import com.example.kabsu.subject.response.SubjectResponseDto;
+import com.example.kabsu.subject.request.SubjectRequest;
+import com.example.kabsu.subject.request.SubjectUpdateRequest;
+import com.example.kabsu.subject.response.SubjectResponse;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SubjectMapper {
 
-    public Subject toEntity(SubjectRequestDto dto) {
+    public Subject toEntity(final SubjectRequest request) {
         return Subject
                 .builder()
-                .name(dto.name())
-                .code(dto.code())
-                .description(dto.description())
-                .units(dto.units())
-                .type(dto.type())
+                .name(request.name())
+                .code(request.code())
+                .description(request.description())
+                .units(request.units())
+                .type(request.type())
                 .build();
     }
 
-    public void updateEntity(SubjectUpdateDto dto, Subject subject) {
-        if (dto.name() != null) subject.setName(dto.name());
-        if (dto.code() != null) subject.setCode(dto.code());
-        if (dto.type() != null) subject.setType(dto.type());
-        if (dto.type() != null) subject.setType(dto.type());
-        if (dto.units() != null) subject.setUnits(dto.units());
-        if (dto.description() != null) subject.setDescription(dto.description());
+    public void updateEntity(final SubjectUpdateRequest request, Subject subject) {
+        if (request.name() != null) subject.setName(request.name());
+        if (request.code() != null) subject.setCode(request.code());
+        if (request.type() != null) subject.setType(request.type());
+        if (request.type() != null) subject.setType(request.type());
+        if (request.units() != null) subject.setUnits(request.units());
+        if (request.description() != null) subject.setDescription(request.description());
     }
 
-    public SubjectResponseDto toDto(Subject subject) {
-        return new SubjectResponseDto(
+    public SubjectResponse toSubjectResponse(Subject subject) {
+        return new SubjectResponse(
                 subject.getId(),
                 subject.getName(),
                 subject.getCode(),

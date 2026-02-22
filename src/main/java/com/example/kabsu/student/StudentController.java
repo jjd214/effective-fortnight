@@ -1,10 +1,9 @@
 package com.example.kabsu.student;
 
 import com.example.kabsu.common.response.ApiResponse;
-import com.example.kabsu.student.impl.StudentServiceImpl;
-import com.example.kabsu.student.request.StudentRequestDto;
-import com.example.kabsu.student.request.StudentUpdateDto;
-import com.example.kabsu.student.response.StudentResponseDto;
+import com.example.kabsu.student.request.StudentRequest;
+import com.example.kabsu.student.request.StudentUpdateRequest;
+import com.example.kabsu.student.response.StudentResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -20,60 +19,60 @@ import java.util.List;
 @RequestMapping("/api/v1/students")
 public class StudentController {
 
-    private final StudentServiceImpl studentServiceImpl;
+    private final StudentService studentService;
 
     @PostMapping
-    public ResponseEntity<ApiResponse<StudentResponseDto>> create(@Valid @RequestBody StudentRequestDto dto) {
-        var response = studentServiceImpl.create(dto);
+    public ResponseEntity<ApiResponse<StudentResponse>> create(@Valid @RequestBody StudentRequest request) {
+        var response = studentService.create(request);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(response));
     }
 
     @GetMapping("/{student-id}")
-    public ResponseEntity<ApiResponse<StudentResponseDto>> find(@PathVariable("student-id") Long id) {
-        var response = studentServiceImpl.find(id);
+    public ResponseEntity<ApiResponse<StudentResponse>> find(@PathVariable("student-id") Long id) {
+        var response = studentService.find(id);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(response));
     }
 
     @GetMapping
-    public ResponseEntity<ApiResponse<List<StudentResponseDto>>> findAll(
+    public ResponseEntity<ApiResponse<List<StudentResponse>>> findAll(
             @PageableDefault(sort = "id") Pageable pageable) {
-        var response = studentServiceImpl.findAll(pageable);
+        var response = studentService.findAll(pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(response));
     }
 
     @GetMapping("/search")
-    public ResponseEntity<ApiResponse<List<StudentResponseDto>>> findStudentByName(
+    public ResponseEntity<ApiResponse<List<StudentResponse>>> findStudentByName(
             @RequestParam(name = "firstName") String firstName,
             @PageableDefault(sort = "id") Pageable pageable) {
-        var response = studentServiceImpl.findStudentByFirstName(firstName,pageable);
+        var response = studentService.findStudentByFirstName(firstName,pageable);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(response));
     }
 
     @PutMapping("/{student-id}")
-    public ResponseEntity<ApiResponse<StudentResponseDto>> update(
+    public ResponseEntity<ApiResponse<StudentResponse>> update(
             @PathVariable("student-id") Long studentId,
-            @Valid @RequestBody StudentUpdateDto dto) {
-        var response = studentServiceImpl.update(studentId,dto);
+            @Valid @RequestBody StudentUpdateRequest request) {
+        var response = studentService.update(studentId, request);
         return ResponseEntity.status(HttpStatus.OK)
                 .body(ApiResponse.success(response));
     }
 
     @DeleteMapping("/{student-id}")
     public ResponseEntity<Void> delete(@PathVariable("student-id") Long id) {
-        studentServiceImpl.delete(id);
+        studentService.delete(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
     }
 
     @PostMapping("/{student-id}/subjects/{subject-id}")
-    public ResponseEntity<ApiResponse<StudentResponseDto>> assignSubject(
+    public ResponseEntity<ApiResponse<StudentResponse>> assignSubject(
             @PathVariable("student-id") Long studentId,
             @PathVariable("subject-id") Long subjectId) {
-        var response = studentServiceImpl.assignSubject(studentId, subjectId);
+        var response = studentService.assignSubject(studentId, subjectId);
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(ApiResponse.success(response));
     }
@@ -82,7 +81,7 @@ public class StudentController {
     public ResponseEntity<Void> removeSubject(
             @PathVariable("student-id") Long studentId,
             @PathVariable("subject-id") Long subjectId) {
-        studentServiceImpl.removeSubject(studentId,subjectId);
+        studentService.removeSubject(studentId,subjectId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT)
                 .build();
     }

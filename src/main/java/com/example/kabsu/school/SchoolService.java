@@ -1,17 +1,17 @@
 package com.example.kabsu.school;
 
-import com.example.kabsu.school.request.SchoolRequestDto;
-import com.example.kabsu.school.request.SchoolUpdateDto;
-import com.example.kabsu.school.response.SchoolResponseDto;
+import com.example.kabsu.school.request.SchoolRequest;
+import com.example.kabsu.school.request.SchoolUpdateRequest;
+import com.example.kabsu.school.response.SchoolResponse;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface SchoolService {
-    SchoolResponseDto create(SchoolRequestDto dto);
-    SchoolResponseDto find(Long id);
-    List<SchoolResponseDto> findAll(Pageable pageable);
-    List<SchoolResponseDto> findSchoolByName(String schoolName, Pageable pageable);
-    SchoolResponseDto update(Long schoolId, SchoolUpdateDto dto);
+    SchoolResponse create(SchoolRequest request);
+    SchoolResponse find(Long id);
+    List<SchoolResponse> findAll(Pageable pageable);
+    List<SchoolResponse> findSchoolByName(String schoolName, Pageable pageable);
+    SchoolResponse update(Long schoolId, SchoolUpdateRequest request);
     void delete(Long schoolId);
 }

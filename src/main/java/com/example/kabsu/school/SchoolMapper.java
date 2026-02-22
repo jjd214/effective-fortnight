@@ -1,24 +1,24 @@
 package com.example.kabsu.school;
 
-import com.example.kabsu.school.request.SchoolRequestDto;
-import com.example.kabsu.school.request.SchoolUpdateDto;
-import com.example.kabsu.school.response.SchoolResponseDto;
+import com.example.kabsu.school.request.SchoolRequest;
+import com.example.kabsu.school.request.SchoolUpdateRequest;
+import com.example.kabsu.school.response.SchoolResponse;
 import org.springframework.stereotype.Component;
 
 @Component
 public class SchoolMapper {
 
-    public School toEntity(SchoolRequestDto dto) {
+    public School toEntity(final SchoolRequest request) {
         return School
                 .builder()
-                .name(dto.name())
-                .description(dto.description())
-                .type(dto.type())
+                .name(request.name())
+                .description(request.description())
+                .type(request.type())
                 .build();
     }
 
-    public SchoolResponseDto toDto(School school) {
-        return new SchoolResponseDto(
+    public SchoolResponse toSchoolResponse(School school) {
+        return new SchoolResponse(
                 school.getId(),
                 school.getName(),
                 school.getDescription(),
@@ -28,10 +28,10 @@ public class SchoolMapper {
         );
     }
 
-    public void updateEntity(School school, SchoolUpdateDto dto) {
-        if (dto.name() != null) school.setName(dto.name());
-        if (dto.description() != null) school.setDescription(dto.description());
-        if (dto.type() != null) school.setType(dto.type());
+    public void updateEntity(School school, final SchoolUpdateRequest request) {
+        if (request.name() != null) school.setName(request.name());
+        if (request.description() != null) school.setDescription(request.description());
+        if (request.type() != null) school.setType(request.type());
     }
 
 }

@@ -9,3 +9,6 @@ spring:
     user:
       name: ${APP_USER}
       password: ${APP_PASSWORD}
+    jwt:
+      access-token-expiration: 86400000 # 24 hours for local test / 15 mins for prod (best)
+      refresh-token-expiration: 604800000

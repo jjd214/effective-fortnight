@@ -1,18 +1,17 @@
 package com.example.kabsu.subject;
 
-import com.example.kabsu.subject.request.SubjectRequestDto;
-import com.example.kabsu.subject.request.SubjectUpdateDto;
-import com.example.kabsu.subject.response.SubjectResponseDto;
+import com.example.kabsu.subject.request.SubjectRequest;
+import com.example.kabsu.subject.request.SubjectUpdateRequest;
+import com.example.kabsu.subject.response.SubjectResponse;
 import org.springframework.data.domain.Pageable;
 
 import java.util.List;
 
 public interface SubjectService {
-
-    SubjectResponseDto create(SubjectRequestDto dto);
-    SubjectResponseDto find(Long subjectId);
-    List<SubjectResponseDto> findAll(Pageable pageable);
-    List<SubjectResponseDto> findBySubjectName(String subjectName, Pageable pageable);
-    SubjectResponseDto update(Long subjectId, SubjectUpdateDto dto);
+    SubjectResponse create(SubjectRequest request);
+    SubjectResponse find(Long subjectId);
+    List<SubjectResponse> findAll(Pageable pageable);
+    List<SubjectResponse> findBySubjectName(String subjectName, Pageable pageable);
+    SubjectResponse update(Long subjectId, SubjectUpdateRequest request);
     void delete(Long subjectId);
 }

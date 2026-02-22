@@ -1,17 +1,16 @@
-package com.example.kabsu.subject.response;
+package com.example.kabsu.student.response;
 
 import com.example.kabsu.types.SubjectType;
 
 import java.time.LocalDateTime;
 
-public record SubjectResponseDto(
+public record SubjectSummary(
         Long id,
         String name,
         String code,
         String description,
         Integer units,
         SubjectType subjectType,
-        LocalDateTime updatedAt,
         LocalDateTime createdAt
 ) {
 }

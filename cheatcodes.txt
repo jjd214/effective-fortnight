@@ -3,6 +3,14 @@ user - postgres
 Password - admin
 Port - 5432
 
+SPRING CORE FEATURES
+
+Inversion of Control Container (ioc)
+Dependency Injection
+Bean Lifecycle Management
+Aspect-Oriented Programming
+ApplicationContext
+
 Maven concept
 clean
 default (lifecycle) - compile 
@@ -18,6 +26,26 @@ git
 generate ssh - ssh-keygen -o
 ssh path - C:\Users\johnj\.ssh
 
+git merge dev --no-edit : merge the changes to main without vim
+git pull <remote> <branch> : pull changes from dev branch
+git remote -v : check origin
+
+-- cleaner --
+git fetch origin 
+git merge origin/main
+
+
+openssl genpkey -algorithm RSA -out private_key.pem -pkeyopt rsa_keygen_bits:2048
+
+-openssl			Runs the OpenSSL program
+-genpkey			Generate a private key
+-algorithm RSA			Use RSA encryption
+-out private_key.pem		Save output as private_key.pem
+-pkeyopt rsa_keygen_bits:2048	Make it 2048-bit strength
+
+openssl rsa -pubout -in private_key.pem -out public_key.pem - This command extracts the public key from your private key.
+
+
 workflow
 Start New Work
 git checkout main
@@ -30,6 +58,13 @@ git push -u origin feature/data-validation
 clean up after merge
 git branch -d dev/data-validation 
 git push origin --delete dev/data-validation
+
+git stash
+git checkout main
+# Later, if you want to get your changes back:
+git stash list
+# git checkout dev
+# git stash pop
 
 
 docker (commands)
@@ -135,7 +170,7 @@ annotations - @Component : Spring manages this class / Let spring create an obje
             - @PreUpdate - For entity (on update) behavior
             - @PreDelete - For entity (on delete) behavior
 	    - auto-ddl : create (dangerous) update (safe for dev mode)
-
+	    - @EntityGraph - “When you load this entity, also load these relationships immediately.” It solves the 				classic: 🚨 N + 1 Problem
 profiles    - 
 
 ClassDto          → incoming request
@@ -153,6 +188,9 @@ bidirectional - Both entities knows each other.
 owning side - (Child) andun yung foreign key sa table nayon
 inverse side - (Parent) andito yung mapping.
 
+@JsonIgnoreProperties("students") // prevent infinite loop. use in both entity (MANY TO MANY)
+👉 Always use Set for ManyToMany Relationship.
+
 @Getter
 @Setter
 @Accessors(chain = true)  // <- enables fluent pattern
@@ -163,6 +201,13 @@ orphanRemoval = true - “If a child entity is removed from its parent’s colle
 @Transactional - “Run this method inside a database transaction.
 If something fails, all changes are rolled back automatically.
 If it succeeds, all changes are committed together.”
+
+AuditingEntityListener = automatic timestamp manager.
+@Configuration
+@EnableJpaAuditing
+public class JpaConfig {
+// enable the jpa auditing globally for the auditinglisteners to work
+}
 
 
 JUnit / Mockito
@@ -190,4 +235,7 @@ spring:
         format_sql: true
     database: postgresql
     database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+STATEFUL	Uses session	Traditional web apps
+STATELESS	No session	JWT / REST API
 

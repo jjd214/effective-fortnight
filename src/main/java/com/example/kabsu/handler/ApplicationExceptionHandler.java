@@ -2,15 +2,21 @@ package com.example.kabsu.handler;
 
 import com.example.kabsu.common.response.ApiError;
 import com.example.kabsu.exception.BusinessException;
+import com.example.kabsu.exception.ErrorCode;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -18,53 +24,82 @@ import java.util.Map;
 @Slf4j
 public class ApplicationExceptionHandler {
 
-    @ExceptionHandler(Exception.class)
-    public ResponseEntity<ApiError> handleGenericException(Exception e) {
-        log.error("Unexpected error occurred", e);
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ApiError> handleMethodArgumentNotValidException(
+            MethodArgumentNotValidException ex,
+            HttpServletRequest request) {
 
-        var error = new ApiError(
-                HttpStatus.INTERNAL_SERVER_ERROR.value(),
-                "An unexpected error occurred",
-                Map.of("error", "Please contact support"),
-                LocalDateTime.now()
-        );
+        List<ApiError.FieldError> fieldErrors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(e -> new ApiError.FieldError(e.getField(), e.getRejectedValue(), e.getDefaultMessage()))
+                .toList();
 
-        return ResponseEntity
-                .status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(error);
+        return buildError(HttpStatus.BAD_REQUEST, "Validation failed", request, fieldErrors);
     }
 
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ApiError> handleMethodArgumentNotValidException(MethodArgumentNotValidException ex) {
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ApiError> handleConstraintViolationException(
+            ConstraintViolationException ex,
+            HttpServletRequest request) {
 
-        var errors = new HashMap<String, String>();
-        ex.getBindingResult()
-                .getFieldErrors()
-                .forEach(error -> errors.put(error.getField(), error.getDefaultMessage()));
+        List<ApiError.FieldError> fieldErrors = ex.getConstraintViolations()
+                .stream()
+                .map(cv -> new ApiError.FieldError(
+                        cv.getPropertyPath().toString(),
+                        cv.getInvalidValue(),
+                        cv.getMessage()))
+                .toList();
 
-        var error = new ApiError(
-                HttpStatus.BAD_REQUEST.value(),
-                "Validation failed",
-                errors,
-                LocalDateTime.now()
-        );
+        return buildError(HttpStatus.BAD_REQUEST, "Constraint violation", request, fieldErrors);
+    }
 
-        return ResponseEntity.badRequest().body(error);
+    @ExceptionHandler(BadCredentialsException.class)
+    public ResponseEntity<ApiError> handleBadCredentialsException(
+            BadCredentialsException ex,
+            HttpServletRequest request) {
+
+        var errorCode = ErrorCode.BAD_CREDENTIALS;
+        return buildError(errorCode.getStatus(), errorCode.getDefaultMessage(), request, null);
     }
 
     @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<ApiError> handleBusinessException(BusinessException ex) {
+    public ResponseEntity<ApiError> handleBusinessException(
+            BusinessException ex,
+            HttpServletRequest request) {
+
         var errorCode = ex.getErrorCode();
+        return buildError(errorCode.getStatus(), ex.getMessage(), request, null);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ApiError> handleGenericException(
+            Exception ex,
+            HttpServletRequest request) {
+
+        log.error("Unexpected error at {}: {}", request.getRequestURI(), ex.getMessage(), ex);
+        return buildError(HttpStatus.INTERNAL_SERVER_ERROR, "An unexpected error occurred", request, null);
+    }
+
+// ---- helper ----
+
+    private ResponseEntity<ApiError> buildError(
+            HttpStatus status,
+            String message,
+            HttpServletRequest request,
+            List<ApiError.FieldError> fieldErrors) {
 
         var error = new ApiError(
-                errorCode.getStatus().value(),
-                errorCode.getCode(),
-                Map.of("message", ex.getMessage()),
+                status.value(),
+                status.getReasonPhrase(),
+                message,
+                request.getRequestURI(),
+                fieldErrors,
+                null,
+//                MDC.get("traceId"),   // null if not using Sleuth / Micrometer Tracing
                 LocalDateTime.now()
         );
 
-        return ResponseEntity
-                .status(errorCode.getStatus())
-                .body(error);
+        return ResponseEntity.status(status).body(error);
     }
 }

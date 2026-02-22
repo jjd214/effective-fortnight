@@ -4,7 +4,7 @@ import com.example.kabsu.types.SchoolType;
 
 import java.time.LocalDateTime;
 
-public record SchoolResponseDto(
+public record SchoolResponse(
         Long id,
         String name,
         String description,
