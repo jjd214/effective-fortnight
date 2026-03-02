@@ -1,0 +1,103 @@
+What is Java, and why is it platform independent?
+
+so, java is a high-level object oriented programming language and it is a 
+platform independent because java compiler converts your java code into bytecode not into 
+machine code. which can run on any system with a java virtual machine.
+
+additionally java is widely use for building web applications, desktop applications,
+enterprise businesses and games
+
+Explain the concept of Object Oriented Programming (OOP)
+
+What are the main features of Java?
+
+The main features of java is, it is a platform independent, object oriented programming,
+fast, secure, and high performance. 
+
+What is Java Virtual Machine (JVM)?
+
+JVM or Java Virtual Machine it is a runtime environment that executes java bytecodes and 
+translate it into machine code specific for operating system where the JVM is installed.
+
+
+What's the difference between JDK, JRE, and JVM?
+
+JDK or java development kit it is a toolkit for java development, It is a toolkit which
+developers use.
+
+JRE or Java Runtime Environment it is a Environment use to run Java Programs.
+
+JVM or Java Virtual Machine it is a Engine that executes java bytecodes.
+
+what is class in java?
+class in java is a blue print for creating objects it contains states and behaviour.
+
+what is object in java?
+
+An object is an actual instance of a class. Actual thing that contains states and behaviours
+
+What is an exception?
+
+exception in an event that occurs and disrupts the normal workflow of the program. this could happen
+if 0 is being divided, accessing null objects or file not found.
+
+How do you handle exceptions in Java?
+
+what is check & unchecked exceptions?
+
+what is Wrapper classes?
+it is a classes for primitive datatypes. it is use to treat primitive datatypes as class/object so
+it can be used more efficiently.
+
+access vs non-access modifiers
+
+method overloading vs overriding
+
+primitive datatypes vs non primitive datatypes
+
+stack vs heap memory
+
+data vs information
+
+what is algorithm?
+
+what is data structure?
+
+Array vs ArrayList?
+
+what is hashmap? 
+
+what is Stack?
+
+what is queue?
+
+Queue vs Priority Queue
+
+Array/ArrayList vs LinkedList
+
+what is big O notation?
+
+what is linear search
+
+what is binary search?
+
+what is generic?
+
+what is threads?
+allows program to run Simultaneously
+
+what is multithreading
+enables a program to run multiple threads concurrently.
+
+what is aggregation and composition?
+Aggregation - object has a relationship to another object independently.
+Composition - Object is part of another object dependently.
+
+what is comparator and comparable?
+comparator - it compare itself to another
+comparable - it compare two other objects
+
+String vs StringBuilder vs StringBuffer
+
+
+
